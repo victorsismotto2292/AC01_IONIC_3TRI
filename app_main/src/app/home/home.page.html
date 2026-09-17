@@ -1,20 +1,66 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
+  <ion-toolbar color="primary">
+    <ion-title color="dark" style="text-align: center;">
+      AC01 - IONIC - 3ºTRIMESTRE
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div style="padding: 20px">
+
+    <h1 style="text-align: center;">
+      APLICATIVO DE RESERVA COM ORÇAMENTOS
+    </h1>
+
+    <ion-input
+      label="Digite o valor da diária"
+      labelPlacement="floating"
+      placeholder="Somente números"
+      type="number"
+      [(ngModel)]="diaria"
+      style="max-width: 200px;">
+    </ion-input>
+
+    <ion-item-divider></ion-item-divider>
+
+    <p>
+      Ajuste a quantidade de dias (1 a 30 dias)
+    </p>
+
+    <ion-range
+      (ionChange)="onIonChange($event)"
+      [ticks]="true"
+      [snaps]="true"
+      [min]="1"
+      [max]="30"
+      [(ngModel)]="rangeDias"
+      style="max-width: 300px;">
+    </ion-range>
+
+    <ion-label>
+      Quantidade de dias:
+      <strong>{{rangeDias}}</strong>
+    </ion-label>
+
+    <p
+      *ngIf="res"
+      style="color: red;">
+      {{res}}
+    </p>
+
+    <ion-item-divider></ion-item-divider>
+
+    <ion-button
+      expand="block"
+      style="max-width: 200px; padding: 10px"
+      (click)="telaReserva()">
+
+      VERIFICAR RESERVA
+
+    </ion-button>
+
   </div>
+
 </ion-content>

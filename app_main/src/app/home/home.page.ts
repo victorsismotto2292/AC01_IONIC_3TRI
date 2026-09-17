@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { OrcamentosService } from '../reservas/orcamentos';
+import { Router } from '@angular/router';
+import { RangeCustomEvent } from '@ionic/angular';
 
-interface Orcamento{
+interface Orcamento {
   diaria: string;
   dias: string;
   total: string;
@@ -16,49 +17,58 @@ interface Orcamento{
 })
 export class HomePage {
 
-  orcamentos: Orcamento[] = [];
-  orcamento: Orcamento = {diaria: '', dias: '1', total: '', datareserva: new Date()};
+  // PARTE ANTIGA:
+  diaria: string = '';
+  rangeDias: number = 1;
+  res: string = '';
+  alertButtons = ['OK'];
 
-  indiceEdicao: number = -1;
+  // PARTE NOVA:
+  orcamento: Orcamento = {
+    diaria: '',
+    dias: '1',
+    total: '',
+    datareserva: new Date()
+  };
 
-  constructor(private orcamentosService: OrcamentosService) {}
+  constructor(private router: Router) {}
 
-  ngOnInit(){
-    this.carregarOrcamentos();
+  // Alteração do ion-range:
+  onIonChange(ev: RangeCustomEvent) {
+    this.rangeDias = parseInt(ev.detail.value.toString());
+
+    // Atualiza também o objeto do orçamento
+    this.orcamento.dias = this.rangeDias.toString();
   }
 
-  // Carregar orçamentos:
-  async carregarOrcamentos(){
-    this.orcamentos = await this.orcamentosService.obterOrcamentos();
-  }
+  // Verificar os dados e ir para a Tela 2:
+  telaReserva() {
 
-  // Salvar orçamento:
-  async salvarOrcamento(){
-    if (this.indiceEdicao >= 0){
-      await this.orcamentosService.atualizarOrcamento(this.indiceEdicao, this.orcamento);
+    const vdiaria = parseFloat(this.diaria);
+
+    // Validação da diária
+    if (isNaN(vdiaria) || this.diaria === '' || vdiaria <= 0) {
+
+      this.res =
+        'Inválido, por favor, digite um valor da diária positivo e não nulo.';
+
+      return;
     }
-    else{
-      await this.orcamentosService.adicionarOrcamento(this.orcamento);
-    }
-    this.limparFormulario();
-    this.carregarOrcamentos();
-  }
 
-  // Atualizar ou editar ou orçamento:
-  editarContato(indice: number){
-    this.orcamento = {...this.orcamentos[indice]};
-    this.indiceEdicao = indice;
-  }
+    // Calcula o total
+    const total = vdiaria * this.rangeDias;
 
-  // Excluir um orçamento:
-  async excluirOrcamento(indice: number){
-    await this.orcamentosService.excluirOrcamento(indice);
-    this.carregarOrcamentos();
-  }
+    // Guarda os dados no objeto
+    this.orcamento.diaria = this.diaria;
+    this.orcamento.dias = this.rangeDias.toString();
+    this.orcamento.total = total.toFixed(2);
 
-  limparFormulario(){
-    this.orcamento = { diaria: '', dias: '-1', total: '', datareserva: new Date() };
-    this.indiceEdicao = -1;
+    this.res = '';
+
+    // Vai para a tela de detalhes
+    this.router.navigateByUrl(
+      `tela-orcamento/${this.orcamento.diaria}/${this.orcamento.dias}/${this.orcamento.total}`
+    );
   }
 
 }

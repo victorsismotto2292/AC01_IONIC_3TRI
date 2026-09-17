@@ -1,13 +1,40 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>confirmacao</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Reserva Confirmada</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">confirmacao</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+
+  <div style="padding: 20px; text-align: center;">
+
+    <h1>
+      SUA RESERVA ESTÁ AGENDADA!
+    </h1>
+
+    <p>
+      AGUARDANDO O PAGAMENTO DE
+      <strong>R$ {{total}}</strong>
+      PARA CONFIRMAR SUA ESTADIA CONOSCO!
+    </p>
+
+    <ion-button
+      expand="block"
+      (click)="verLista()">
+
+      VER LISTA DE ORÇAMENTOS
+
+    </ion-button>
+
+    <ion-button
+      expand="block"
+      color="medium"
+      (click)="novaReserva()">
+
+      NOVA RESERVA
+
+    </ion-button>
+
+  </div>
+
 </ion-content>
