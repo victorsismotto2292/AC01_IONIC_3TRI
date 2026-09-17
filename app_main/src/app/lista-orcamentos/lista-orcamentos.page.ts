@@ -1,13 +1,7 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { OrcamentosService } from '../reservas/orcamentos';
-
-interface Orcamento {
-  diaria: string;
-  dias: string;
-  total: string;
-  datareserva: Date;
-}
+import { Location } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { AlertController } from '@ionic/angular';
+import { Orcamento, OrcamentosService } from '../reservas/orcamentos';
 
 @Component({
   selector: 'app-lista-orcamentos',
@@ -16,33 +10,45 @@ interface Orcamento {
   standalone: false,
 })
 export class ListaOrcamentosPage {
-
+  private readonly orcamentosService = inject(OrcamentosService);
+  private readonly alertController = inject(AlertController);
+  private readonly location = inject(Location);
   orcamentos: Orcamento[] = [];
 
-  constructor(
-    private orcamentosService: OrcamentosService,
-    private router: Router
-  ) {}
-
-  ngOnInit() {
-    this.carregarOrcamentos();
+  async ionViewWillEnter(): Promise<void> {
+    await this.carregarOrcamentos();
   }
 
-  async carregarOrcamentos() {
-    this.orcamentos =
-      await this.orcamentosService.obterOrcamentos();
+  async carregarOrcamentos(): Promise<void> {
+    this.orcamentos = await this.orcamentosService.obterOrcamentos();
   }
 
-  async excluirOrcamento(indice: number) {
+  async excluirOrcamento(indice: number): Promise<void> {
+    const orcamento = this.orcamentos[indice];
+    if (!orcamento) {
+      return;
+    }
+
+    const alerta = await this.alertController.create({
+      header: 'Excluir orçamento',
+      message: `Tem certeza que deseja excluir o orçamento de R$ ${orcamento.total}?`,
+      buttons: [
+        { text: 'CANCELAR', role: 'cancel' },
+        { text: 'EXCLUIR', role: 'destructive' }
+      ]
+    });
+
+    await alerta.present();
+    const resultado = await alerta.onDidDismiss();
+    if (resultado.role !== 'destructive') {
+      return;
+    }
 
     await this.orcamentosService.excluirOrcamento(indice);
-
-    this.carregarOrcamentos();
-
+    await this.carregarOrcamentos();
   }
 
-  voltar() {
-    this.router.navigateByUrl('confirmacao/0');
+  voltar(): void {
+    this.location.back();
   }
-
 }

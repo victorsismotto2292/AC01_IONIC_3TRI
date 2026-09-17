@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { OrcamentosService } from '../reservas/orcamentos';
 
 @Component({
@@ -8,45 +9,48 @@ import { OrcamentosService } from '../reservas/orcamentos';
   styleUrls: ['./tela-orcamento.page.scss'],
   standalone: false,
 })
-export class TelaOrcamentoPage {
+export class TelaOrcamentoPage implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly alertController = inject(AlertController);
+  private readonly orcamentosService = inject(OrcamentosService);
+  diaria = '';
+  dias = '';
+  total = '';
 
-  diaria: string = '';
-  dias: string = '';
-  total: string = '';
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private orcamentosService: OrcamentosService
-  ) {}
-
-  ngOnInit() {
-
-    this.diaria =
-      this.route.snapshot.paramMap.get('diaria') || '';
-
-    this.dias =
-      this.route.snapshot.paramMap.get('dias') || '';
-
-    this.total =
-      this.route.snapshot.paramMap.get('total') || '';
+  ngOnInit(): void {
+    this.diaria = this.route.snapshot.paramMap.get('diaria') || '';
+    this.dias = this.route.snapshot.paramMap.get('dias') || '';
+    this.total = this.route.snapshot.paramMap.get('total') || '';
   }
 
-  voltar() {
-    this.router.navigateByUrl('home');
+  voltar(): void {
+    this.router.navigateByUrl('/home');
   }
 
-  async confirmar() {
+  async confirmar(): Promise<void> {
+    const alerta = await this.alertController.create({
+      header: 'Confirmar reserva',
+      message: `Deseja salvar a reserva de R$ ${this.total} por ${this.dias} dia(s)?`,
+      buttons: [
+        { text: 'CANCELAR', role: 'cancel' },
+        { text: 'CONFIRMAR', role: 'confirm' }
+      ]
+    });
 
-    const orcamento = {
+    await alerta.present();
+    const resultado = await alerta.onDidDismiss();
+    if (resultado.role !== 'confirm') {
+      return;
+    }
+
+    await this.orcamentosService.adicionarOrcamento({
       diaria: this.diaria,
       dias: this.dias,
       total: this.total,
-      datareserva: new Date()
-    };
+      datareserva: new Date().toISOString()
+    });
 
-    await this.orcamentosService.adicionarOrcamento(orcamento);
-
-    this.router.navigateByUrl(`confirmacao/${this.total}`);
+    await this.router.navigate(['/confirmacao', this.total]);
   }
 }

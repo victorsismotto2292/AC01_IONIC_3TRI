@@ -5,52 +5,25 @@
 </ion-header>
 
 <ion-content>
-
-  <ion-list>
-
-    <ion-item *ngFor="let o of orcamentos; let i = index">
-
-      <ion-label>
-
-        <h2>Diária: R$ {{o.diaria}}</h2>
-
-        <p>
-          Dias: {{o.dias}}
-        </p>
-
-        <p>
-          Total: R$ {{o.total}}
-        </p>
-
-        <p>
-          Data: {{o.datareserva | date:'dd/MM/yyyy HH:mm'}}
-        </p>
-
-      </ion-label>
-
-      <ion-button
-        color="danger"
-        (click)="excluirOrcamento(i)">
-
-        EXCLUIR
-
-      </ion-button>
-
-    </ion-item>
-
-  </ion-list>
+  @if (orcamentos.length > 0) {
+    <ion-list>
+      @for (o of orcamentos; track $index; let i = $index) {
+        <ion-item>
+          <ion-label>
+            <h2>Diária: R$ {{ o.diaria }}</h2>
+            <p>Dias: {{ o.dias }}</p>
+            <p>Total: R$ {{ o.total }}</p>
+            <p>Data: {{ o.datareserva | date:'dd/MM/yyyy HH:mm' }}</p>
+          </ion-label>
+          <ion-button color="danger" (click)="excluirOrcamento(i)">EXCLUIR</ion-button>
+        </ion-item>
+      }
+    </ion-list>
+  } @else {
+    <p style="padding: 20px; text-align: center;">Nenhum orçamento salvo.</p>
+  }
 
   <div style="padding: 20px;">
-
-    <ion-button
-      expand="block"
-      color="medium"
-      (click)="voltar()">
-
-      VOLTAR
-
-    </ion-button>
-
+    <ion-button expand="block" color="medium" (click)="voltar()">VOLTAR</ion-button>
   </div>
-
 </ion-content>

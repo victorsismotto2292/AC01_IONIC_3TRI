@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -7,28 +7,20 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./confirmacao.page.scss'],
   standalone: false,
 })
-export class ConfirmacaoPage {
+export class ConfirmacaoPage implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  total = '';
 
-  total: string = '';
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
-
-  ngOnInit() {
-
-    this.total =
-      this.route.snapshot.paramMap.get('total') || '';
-
+  ngOnInit(): void {
+    this.total = this.route.snapshot.paramMap.get('total') || '';
   }
 
-  verLista() {
-    this.router.navigateByUrl('lista-orcamentos');
+  verLista(): void {
+    this.router.navigateByUrl('/lista-orcamentos');
   }
 
-  novaReserva() {
-    this.router.navigateByUrl('home');
+  novaReserva(): void {
+    this.router.navigateByUrl('/home');
   }
-
 }

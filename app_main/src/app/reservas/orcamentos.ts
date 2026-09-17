@@ -1,53 +1,47 @@
-import { Injectable } from "@angular/core";
-import { Storage } from "@ionic/storage-angular";
+import { Injectable, inject } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
 
-interface Orcamento{
-    diaria: string;
-    dias: string;
-    total: string;
-    datareserva: Date;
+export interface Orcamento {
+  diaria: string;
+  dias: string;
+  total: string;
+  datareserva: string;
 }
 
 @Injectable({
-    providedIn: "root"
+  providedIn: 'root'
 })
+export class OrcamentosService {
+  private readonly storage = inject(Storage);
+  private readonly chave = 'orcamentos';
+  private readonly storagePronto = this.inicializarStorage();
 
-export class OrcamentosService{
-    private storageInicializado = false;
+  private async inicializarStorage(): Promise<void> {
+    await this.storage.create();
+  }
 
-    constructor (private storage: Storage){
-        this.inicializarStorage();
+  async obterOrcamentos(): Promise<Orcamento[]> {
+    await this.storagePronto;
+    const orcamentos = await this.storage.get(this.chave);
+    return Array.isArray(orcamentos) ? orcamentos : [];
+  }
+
+  async adicionarOrcamento(orcamento: Orcamento): Promise<void> {
+    await this.storagePronto;
+    const orcamentos = await this.obterOrcamentos();
+    await this.storage.set(this.chave, [...orcamentos, orcamento]);
+  }
+
+  async excluirOrcamento(indice: number): Promise<void> {
+    await this.storagePronto;
+    const orcamentos = await this.obterOrcamentos();
+    if (indice < 0 || indice >= orcamentos.length) {
+      return;
     }
 
-    private async inicializarStorage(){
-        await this.storage.create();
-        this.storageInicializado = true;
-    }
-
-    // Obter todos os orçamentos:
-    async obterOrcamentos(): Promise<Orcamento[]>{
-        if (!this.storageInicializado) await this.inicializarStorage();
-        return (await this.storage.get('orcamentos')) || [];
-    }
-
-    // Adicionar um orçamento:
-    async adicionarOrcamento(orcamento: Orcamento): Promise<void>{
-        const orcamentos = await this.obterOrcamentos();
-        orcamentos.push(orcamento);
-        await this.storage.set('orcamentos', orcamentos);
-    }
-
-    // Atualizar um orçamento:
-    async atualizarOrcamento(indice: number, orcamento: Orcamento): Promise<void>{
-        const orcamentos = await this.obterOrcamentos();
-        orcamentos[indice] = orcamento;
-        await this.storage.set('orcamentos', orcamentos);
-    }
-
-    // Excluir um orçamento:
-    async excluirOrcamento(indice: number): Promise<void>{
-        const orcamentos = await this.obterOrcamentos();
-        orcamentos.splice(indice, 1);
-        await this.storage.set('orcamentos', orcamentos);
-    }
+    await this.storage.set(
+      this.chave,
+      orcamentos.filter((_, indiceAtual) => indiceAtual !== indice)
+    );
+  }
 }

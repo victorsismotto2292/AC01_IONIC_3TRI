@@ -1,13 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { RangeCustomEvent } from '@ionic/angular';
-
-interface Orcamento {
-  diaria: string;
-  dias: string;
-  total: string;
-  datareserva: Date;
-}
 
 @Component({
   selector: 'app-home',
@@ -16,59 +9,30 @@ interface Orcamento {
   standalone: false,
 })
 export class HomePage {
+  private readonly router = inject(Router);
+  diaria = '';
+  rangeDias = 1;
+  res = '';
 
-  // PARTE ANTIGA:
-  diaria: string = '';
-  rangeDias: number = 1;
-  res: string = '';
-  alertButtons = ['OK'];
-
-  // PARTE NOVA:
-  orcamento: Orcamento = {
-    diaria: '',
-    dias: '1',
-    total: '',
-    datareserva: new Date()
-  };
-
-  constructor(private router: Router) {}
-
-  // Alteração do ion-range:
-  onIonChange(ev: RangeCustomEvent) {
-    this.rangeDias = parseInt(ev.detail.value.toString());
-
-    // Atualiza também o objeto do orçamento
-    this.orcamento.dias = this.rangeDias.toString();
+  onIonChange(evento: RangeCustomEvent): void {
+    const valor = evento.detail.value;
+    this.rangeDias = typeof valor === 'number' ? valor : Number(valor);
   }
 
-  // Verificar os dados e ir para a Tela 2:
-  telaReserva() {
+  telaReserva(): void {
+    const diaria = Number(this.diaria);
 
-    const vdiaria = parseFloat(this.diaria);
-
-    // Validação da diária
-    if (isNaN(vdiaria) || this.diaria === '' || vdiaria <= 0) {
-
-      this.res =
-        'Inválido, por favor, digite um valor da diária positivo e não nulo.';
-
+    if (!this.diaria.trim() || !Number.isFinite(diaria) || diaria <= 0) {
+      this.res = 'Inválido, por favor, digite um valor da diária positivo e não nulo.';
       return;
     }
 
-    // Calcula o total
-    const total = vdiaria * this.rangeDias;
-
-    // Guarda os dados no objeto
-    this.orcamento.diaria = this.diaria;
-    this.orcamento.dias = this.rangeDias.toString();
-    this.orcamento.total = total.toFixed(2);
-
+    const total = diaria * this.rangeDias;
     this.res = '';
-
-    // Vai para a tela de detalhes
-    this.router.navigateByUrl(
-      `tela-orcamento/${this.orcamento.diaria}/${this.orcamento.dias}/${this.orcamento.total}`
-    );
+    this.router.navigate(['/tela-orcamento', diaria.toFixed(2), this.rangeDias, total.toFixed(2)]);
   }
 
+  verLista(): void {
+    this.router.navigateByUrl('/lista-orcamentos');
+  }
 }
