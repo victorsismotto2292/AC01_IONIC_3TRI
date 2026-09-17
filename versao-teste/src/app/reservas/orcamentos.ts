@@ -1,5 +1,5 @@
 import { Service } from '@angular/core';
 
 @Service()
-export class Contatos {
+export class Orcamentos {
 }
