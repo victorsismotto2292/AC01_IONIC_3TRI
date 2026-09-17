@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular/lazy';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 
 import { HomePage } from './home.page';
 
@@ -23,5 +23,16 @@ describe('HomePage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should accept a numeric daily rate and navigate to the quote', async () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+
+    component.diaria = 3000;
+    component.rangeDias = 15;
+    component.telaReserva();
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/tela-orcamento', '3000.00', 15, '45000.00']);
   });
 });

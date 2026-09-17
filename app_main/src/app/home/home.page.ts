@@ -10,7 +10,7 @@ import { RangeCustomEvent } from '@ionic/angular';
 })
 export class HomePage {
   private readonly router = inject(Router);
-  diaria = '';
+  diaria: string | number = '';
   rangeDias = 1;
   res = '';
 
@@ -20,9 +20,10 @@ export class HomePage {
   }
 
   telaReserva(): void {
-    const diaria = Number(this.diaria);
+    const valorDiaria = String(this.diaria ?? '').trim().replace(',', '.');
+    const diaria = parseFloat(valorDiaria);
 
-    if (!this.diaria.trim() || !Number.isFinite(diaria) || diaria <= 0) {
+    if (!valorDiaria || !Number.isFinite(diaria) || diaria <= 0) {
       this.res = 'Inválido, por favor, digite um valor da diária positivo e não nulo.';
       return;
     }
