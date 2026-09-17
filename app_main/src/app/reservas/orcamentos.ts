@@ -26,11 +26,23 @@ export class OrcamentosService {
     return Array.isArray(orcamentos) ? orcamentos : [];
   }
 
-  async adicionarOrcamento(orcamento: Orcamento): Promise<void> {
-    await this.storagePronto;
-    const orcamentos = await this.obterOrcamentos();
-    await this.storage.set(this.chave, [...orcamentos, orcamento]);
-  }
+    async adicionarOrcamento(orcamento: Orcamento): Promise<void> {
+      await this.storagePronto;
+
+      const orcamentos = await this.obterOrcamentos();
+
+      console.log('ANTES DE SALVAR:', orcamentos);
+
+      await this.storage.set(
+        this.chave,
+        [...orcamentos, orcamento]
+      );
+
+      console.log(
+        'DEPOIS DE SALVAR:',
+        await this.storage.get(this.chave)
+      );
+    }
 
   async excluirOrcamento(indice: number): Promise<void> {
     await this.storagePronto;

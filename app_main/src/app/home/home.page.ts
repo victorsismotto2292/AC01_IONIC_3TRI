@@ -13,6 +13,7 @@ export class HomePage {
   diaria: string | number = '';
   rangeDias = 1;
   res = '';
+  alertButtons = ['OK'];
 
   onIonChange(evento: RangeCustomEvent): void {
     const valor = evento.detail.value;

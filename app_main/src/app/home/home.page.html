@@ -15,12 +15,11 @@
     <ion-range (ionChange)="onIonChange($event)" [ticks]="true" [snaps]="true" [min]="1" [max]="30" [(ngModel)]="rangeDias" style="max-width: 300px;"></ion-range>
     <ion-label>Quantidade de dias: <strong>{{ rangeDias }}</strong></ion-label>
 
-    @if (res) {
-      <p style="color: red;">{{ res }}</p>
-    }
+    <ion-alert trigger="res" header="Resultado" message="{{res}}" [buttons]="alertButtons"></ion-alert>
+
 
     <ion-item-divider></ion-item-divider>
-    <ion-button expand="block" style="max-width: 300px; padding: 10px" (click)="telaReserva()">VERIFICAR RESERVA</ion-button>
+    <ion-button expand="block" style="max-width: 300px; padding: 10px" (click)="telaReserva()" id="res">VERIFICAR RESERVA</ion-button>
     <ion-button expand="block" fill="outline" style="max-width: 300px; padding: 10px" (click)="verLista()">VER LISTA DE ORÇAMENTOS</ion-button>
   </div>
 </ion-content>
