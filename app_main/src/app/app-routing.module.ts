@@ -11,6 +11,18 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'tela-orcamento',
+    loadChildren: () => import('./tela-orcamento/tela-orcamento.module').then( m => m.TelaOrcamentoPageModule)
+  },
+  {
+    path: 'confirmacao',
+    loadChildren: () => import('./confirmacao/confirmacao.module').then( m => m.ConfirmacaoPageModule)
+  },
+  {
+    path: 'lista-orcamentos',
+    loadChildren: () => import('./lista-orcamentos/lista-orcamentos.module').then( m => m.ListaOrcamentosPageModule)
+  },
 ];
 
 @NgModule({
