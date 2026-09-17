@@ -1,5 +1,5 @@
 {
-  "name": "versao-teste",
+  "name": "app_main",
   "integrations": {
     "capacitor": {}
   },
