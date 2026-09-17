@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { RangeCustomEvent } from '@ionic/angular';
+import { AlertController, RangeCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -9,29 +9,49 @@ import { RangeCustomEvent } from '@ionic/angular';
   standalone: false,
 })
 export class HomePage {
+
   private readonly router = inject(Router);
+  private readonly alertController = inject(AlertController);
+
   diaria: string | number = '';
   rangeDias = 1;
-  res = '';
-  alertButtons = ['OK'];
 
   onIonChange(evento: RangeCustomEvent): void {
     const valor = evento.detail.value;
-    this.rangeDias = typeof valor === 'number' ? valor : Number(valor);
+
+    this.rangeDias =
+      typeof valor === 'number' ? valor : Number(valor);
   }
 
-  telaReserva(): void {
-    const valorDiaria = String(this.diaria ?? '').trim().replace(',', '.');
+  async telaReserva(): Promise<void> {
+
+    const valorDiaria =
+      String(this.diaria ?? '').trim().replace(',', '.');
+
     const diaria = parseFloat(valorDiaria);
 
     if (!valorDiaria || !Number.isFinite(diaria) || diaria <= 0) {
-      this.res = 'Inválido, por favor, digite um valor da diária positivo e não nulo.';
+
+      const alerta = await this.alertController.create({
+        header: 'ERRO!',
+        message:
+          'Inválido, por favor, digite um valor da diária positivo e não nulo.',
+        buttons: ['OK']
+      });
+
+      await alerta.present();
+
       return;
     }
 
     const total = diaria * this.rangeDias;
-    this.res = '';
-    this.router.navigate(['/tela-orcamento', diaria.toFixed(2), this.rangeDias, total.toFixed(2)]);
+
+    await this.router.navigate([
+      '/tela-orcamento',
+      diaria.toFixed(2),
+      this.rangeDias,
+      total.toFixed(2)
+    ]);
   }
 
   verLista(): void {
