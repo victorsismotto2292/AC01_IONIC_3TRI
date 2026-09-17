@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core'; // INJECT PARA CHAMADA DE APIS E PACOTES IONIC
 import { Storage } from '@ionic/storage-angular';
 
 export interface Orcamento {
@@ -23,7 +23,7 @@ export class OrcamentosService {
   async obterOrcamentos(): Promise<Orcamento[]> {
     await this.storagePronto;
     const orcamentos = await this.storage.get(this.chave);
-    return Array.isArray(orcamentos) ? orcamentos : [];
+    return Array.isArray(orcamentos) ? orcamentos : []; // RETORNA O ARRAY DE ELEMENTOS OU UM ARRAY NULO [] CASO NENHUM ORÇAMENTO FOI CRIADO
   }
 
     async adicionarOrcamento(orcamento: Orcamento): Promise<void> {
@@ -53,7 +53,7 @@ export class OrcamentosService {
 
     await this.storage.set(
       this.chave,
-      orcamentos.filter((_, indiceAtual) => indiceAtual !== indice)
+      orcamentos.filter((_, indiceAtual) => indiceAtual !== indice) // FILTER RETORNA OS ELEMENTOS DO ARRAY DE ORÇAMENTOS QUE OBEDEÇEM A CONDIÇÃO DO LOCALSTORAGE
     );
   }
 }

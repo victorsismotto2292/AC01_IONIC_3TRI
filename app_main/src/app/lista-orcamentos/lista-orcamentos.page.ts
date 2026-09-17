@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { ChangeDetectorRef, Component, inject } from '@angular/core'; // INJECT UTILIZADO PARA CHAMAR A API E OS PACOTES
+import { AlertController } from '@ionic/angular'; // ALERTCONTROLLER PARA USO DE ALERTS PERSONALIZADOS
 import { Orcamento, OrcamentosService } from '../reservas/orcamentos';
 
 @Component({
@@ -23,44 +23,33 @@ export class ListaOrcamentosPage {
   }
 
   async carregarOrcamentos(): Promise<void> {
-
-    this.orcamentos =
-      await this.orcamentosService.obterOrcamentos();
-
-    console.log(
-      'ORÇAMENTOS CARREGADOS NA LISTA:',
-      this.orcamentos
-    );
-
-    this.changeDetector.markForCheck();
+    this.orcamentos =  await this.orcamentosService.obterOrcamentos();
+    this.changeDetector.markForCheck(); // FUNÇÃO QUE VERIFICA QUAIS ELEMENTOS FORAM ALTERADOS NO ARRAY
   }
 
   async excluirOrcamento(indice: number): Promise<void> {
-
     const orcamento = this.orcamentos[indice];
-
     if (!orcamento) {
       return;
     }
-
     const alerta = await this.alertController.create({
       header: 'Excluir orçamento',
       message: `Tem certeza que deseja excluir o orçamento de R$ ${orcamento.total}?`,
-      buttons: [
+      buttons: [ // ESTILIZAÇÕES DO ALERTBUTTONS IONIC
         {
           text: 'CANCELAR',
-          role: 'cancel'
+          role: 'cancel' // FUNÇÃO DE BACK (VOLTAR), CANCELA A OPERAÇÃO
         },
         {
           text: 'EXCLUIR',
-          role: 'destructive'
+          role: 'destructive' // ELIMINA A RESERVA DO ARRAY
         }
       ]
     });
 
     await alerta.present();
 
-    const resultado = await alerta.onDidDismiss();
+    const resultado = await alerta.onDidDismiss(); // RETORNA UM PROMISE<VOID> DEPOIS QUE O ALERTA SOME OU QUANDO O USUÁRIO APERTA UM DOS BOTÕES
 
     if (resultado.role !== 'destructive') {
       return;
@@ -72,7 +61,7 @@ export class ListaOrcamentosPage {
   }
 
   voltar(): void {
-    this.location.back();
+    this.location.back(); // FUNÇÃO QUE VOLTA PARA A TELA 2
   }
 
 }

@@ -19,8 +19,7 @@ export class HomePage {
   onIonChange(evento: RangeCustomEvent): void {
     const valor = evento.detail.value;
 
-    this.rangeDias =
-      typeof valor === 'number' ? valor : Number(valor);
+    this.rangeDias = typeof valor === 'number' ? valor : Number(valor);
   }
 
   async telaReserva(): Promise<void> {
@@ -40,18 +39,12 @@ export class HomePage {
       });
 
       await alerta.present();
-
       return;
     }
 
     const total = diaria * this.rangeDias;
 
-    await this.router.navigate([
-      '/tela-orcamento',
-      diaria.toFixed(2),
-      this.rangeDias,
-      total.toFixed(2)
-    ]);
+    await this.router.navigate(['/tela-orcamento', diaria.toFixed(2), this.rangeDias, total.toFixed(2)]);
   }
 
   verLista(): void {

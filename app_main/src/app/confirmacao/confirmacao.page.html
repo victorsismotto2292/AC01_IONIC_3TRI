@@ -1,40 +1,19 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Reserva Confirmada</ion-title>
+    <ion-title style="text-align: center;">Reserva Confirmada</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
   <div style="padding: 20px; text-align: center;">
 
-    <h1>
-      SUA RESERVA ESTÁ AGENDADA!
-    </h1>
+    <h1>SUA RESERVA ESTÁ AGENDADA!</h1>
 
-    <p>
-      AGUARDANDO O PAGAMENTO DE
-      <strong>R$ {{total}}</strong>
-      PARA CONFIRMAR SUA ESTADIA CONOSCO!
-    </p>
+    <p>AGUARDANDO O PAGAMENTO DE <strong>R$ {{total}}</strong> PARA CONFIRMAR SUA ESTADIA CONOSCO!</p>
 
-    <ion-button
-      expand="block"
-      (click)="verLista()">
+    <ion-button expand="block" (click)="verLista()">VER LISTA DE ORÇAMENTOS</ion-button>
 
-      VER LISTA DE ORÇAMENTOS
-
-    </ion-button>
-
-    <ion-button
-      expand="block"
-      color="medium"
-      (click)="novaReserva()">
-
-      NOVA RESERVA
-
-    </ion-button>
+    <ion-button expand="block" color="medium" (click)="novaReserva()">NOVA RESERVA</ion-button>
 
   </div>
-
 </ion-content>
