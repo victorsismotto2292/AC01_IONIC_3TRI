@@ -1,0 +1,7 @@
+{
+  "name": "versao-teste",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
